@@ -6,39 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FeedbackService {
-    private final FeedbackRepository feedbackRepository;
 
     @Autowired
-    public FeedbackService(FeedbackRepository feedbackRepository) {
-        this.feedbackRepository = feedbackRepository;
-    }
+    private FeedbackRepository feedbackRepository;
 
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findAll();
     }
 
-    public Feedback getFeedbackById(int feedbackId) {
-        return feedbackRepository.findById(feedbackId).orElse(null);
+    public Feedback getFeedbackById(int id) {
+        Optional<Feedback> feedback = feedbackRepository.findById(id);
+        return feedback.orElse(null);
     }
 
-    public List<Feedback> getFeedbackByStudentId(int studentId) {
-        return feedbackRepository.findByStudentID(studentId);
+    public void addFeedback(Feedback feedback) {
+        feedbackRepository.save(feedback);
     }
 
-    public Feedback addFeedback(Feedback feedback) {
-        return feedbackRepository.save(feedback);
+    public void updateFeedback(int id, Feedback updatedFeedback) {
+        Optional<Feedback> feedback = feedbackRepository.findById(id);
+        if (feedback.isPresent()) {
+            Feedback existingFeedback = feedback.get();
+            existingFeedback.setStudentId(updatedFeedback.getStudentId());
+            existingFeedback.setInstructorName(updatedFeedback.getInstructorName());
+            existingFeedback.setFeedback(updatedFeedback.getFeedback());
+            existingFeedback.setDate(updatedFeedback.getDate());
+            feedbackRepository.save(existingFeedback);
+        }
     }
 
-    public Feedback updateFeedback(Feedback feedback) {
-        return feedbackRepository.save(feedback);
+    public void deleteFeedback(int id) {
+        feedbackRepository.deleteById(id);
     }
 
-    public void deleteFeedback(int feedbackId) {
-        feedbackRepository.deleteById(feedbackId);
+    public List<Feedback> getAllFeedbacks() {
+        return null;
     }
-
-    // Add more methods as needed for feedback-related business logic
 }

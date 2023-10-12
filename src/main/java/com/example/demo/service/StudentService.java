@@ -6,23 +6,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
-    private final StudentRepository studentRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    private StudentRepository studentRepository;
 
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    public Student getStudentById(int studentId) {
-        return studentRepository.findById(studentId).orElse(null);
+    public Student getStudentById(int id) {
+        Optional<Student> student = studentRepository.findById(id);
+        return student.orElse(null);
     }
 
-    // Add more methods as needed for student-related business logic
+    public void addStudent(Student student) {
+        studentRepository.save(student);
+    }
+
+    public void updateStudent(int id, Student updatedStudent) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            Student existingStudent = student.get();
+            existingStudent.setFirstName(updatedStudent.getFirstName());
+            existingStudent.setLastName(updatedStudent.getLastName());
+            existingStudent.setDob(updatedStudent.getDob());
+            existingStudent.setGender(updatedStudent.getGender());
+            existingStudent.setEmail(updatedStudent.getEmail());
+            existingStudent.setPhone(updatedStudent.getPhone());
+            studentRepository.save(existingStudent);
+        }
+    }
+
+    public void deleteStudent(int id) {
+        studentRepository.deleteById(id);
+    }
 }

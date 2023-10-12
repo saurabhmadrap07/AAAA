@@ -6,39 +6,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScoreService {
-    private final ScoreRepository scoreRepository;
 
     @Autowired
-    public ScoreService(ScoreRepository scoreRepository) {
-        this.scoreRepository = scoreRepository;
-    }
+    private ScoreRepository scoreRepository;
 
     public List<Score> getAllScores() {
         return scoreRepository.findAll();
     }
 
-    public Score getScoreById(int scoreId) {
-        return scoreRepository.findById(scoreId).orElse(null);
+    public Score getScoreById(int id) {
+        Optional<Score> score = scoreRepository.findById(id);
+        return score.orElse(null);
     }
 
-    public List<Score> getScoresByStudentId(int studentId) {
-        return scoreRepository.findByStudentId(studentId);
+    public void addScore(Score score) {
+        scoreRepository.save(score);
     }
 
-    public Score addScore(Score score) {
-        return scoreRepository.save(score);
+    public void updateScore(int id, Score updatedScore) {
+        Optional<Score> score = scoreRepository.findById(id);
+        if (score.isPresent()) {
+            Score existingScore = score.get();
+            existingScore.setStudentID(updatedScore.getStudentID());
+            existingScore.setCourseID(updatedScore.getCourseID());
+            existingScore.setDateOfExam(updatedScore.getDateOfExam());
+            existingScore.setCreditObtained(updatedScore.getCreditObtained());
+            scoreRepository.save(existingScore);
+        }
     }
 
-    public Score updateScore(Score score) {
-        return scoreRepository.save(score);
+    public void deleteScore(int id) {
+        scoreRepository.deleteById(id);
     }
-
-    public void deleteScore(int scoreId) {
-        scoreRepository.deleteById(scoreId);
-    }
-
-    // Add more methods as needed for score-related business logic
 }

@@ -73,4 +73,25 @@ public class Enrollment {
     public void setCourse(Course course) {
         this.course = course;
     }
+
+    public Object getInstructorId() {
+        return null;
+    }
+
+    public Object getStudentId() {
+        return null;
+    }
+
+    public void setStudentId(Object studentId) {
+    }
+
+    public void setInstructorId(Object instructorId) {
+    }
+
+    public Object getCourseId() {
+        return null;
+    }
+
+    public void setCourseId(Object courseId) {
+    }
 }

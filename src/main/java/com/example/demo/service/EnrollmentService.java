@@ -6,43 +6,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnrollmentService {
-    private final EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    public EnrollmentService(EnrollmentRepository enrollmentRepository) {
-        this.enrollmentRepository = enrollmentRepository;
-    }
+    private EnrollmentRepository enrollmentRepository;
 
     public List<Enrollment> getAllEnrollments() {
         return enrollmentRepository.findAll();
     }
 
-    public Enrollment getEnrollmentById(int enrollmentId) {
-        return enrollmentRepository.findById(enrollmentId).orElse(null);
+    public Enrollment getEnrollmentById(int id) {
+        Optional<Enrollment> enrollment = enrollmentRepository.findById(id);
+        return enrollment.orElse(null);
     }
 
-    public List<Enrollment> getEnrollmentsByStudentId(int studentId) {
-        return enrollmentRepository.findByStudentID(studentId);
+    public void addEnrollment(Enrollment enrollment) {
+        enrollmentRepository.save(enrollment);
     }
 
-    public List<Enrollment> getEnrollmentsByInstructorId(int instructorId) {
-        return enrollmentRepository.findByInstructorID(instructorId);
+    public void updateEnrollment(int id, Enrollment updatedEnrollment) {
+        Optional<Enrollment> enrollment = enrollmentRepository.findById(id);
+        if (enrollment.isPresent()) {
+            Enrollment existingEnrollment = enrollment.get();
+            existingEnrollment.setStudentId(updatedEnrollment.getStudentId());
+            existingEnrollment.setInstructorId(updatedEnrollment.getInstructorId());
+            existingEnrollment.setCourseId(updatedEnrollment.getCourseId());
+            existingEnrollment.setEnrollmentDate(updatedEnrollment.getEnrollmentDate());
+            enrollmentRepository.save(existingEnrollment);
+        }
     }
 
-    public Enrollment addEnrollment(Enrollment enrollment) {
-        return enrollmentRepository.save(enrollment);
+    public void deleteEnrollment(int id) {
+        enrollmentRepository.deleteById(id);
     }
-
-    public Enrollment updateEnrollment(Enrollment enrollment) {
-        return enrollmentRepository.save(enrollment);
-    }
-
-    public void deleteEnrollment(int enrollmentId) {
-        enrollmentRepository.deleteById(enrollmentId);
-    }
-
-    // Add more methods as needed for enrollment-related business logic
 }

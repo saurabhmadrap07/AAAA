@@ -16,9 +16,7 @@ public class Feedback {
     private String feedback;
     private Date date;
 
-    public Feedback() {
-        // Default constructor
-    }
+
 
     public Feedback(Long studentID, String instructorName, String feedback, Date date) {
         this.studentID = studentID;
@@ -65,5 +63,12 @@ public class Feedback {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Object getStudentId() {
+        return null;
+    }
+
+    public void setStudentId(Object studentId2) {
     }
 }

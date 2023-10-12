@@ -5,12 +5,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import jakarta.annotation.Generated;
-
 @Entity
 public class Course {
     @Id
-    @Generated(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseID;
 
     private int credits;
